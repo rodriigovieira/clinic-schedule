@@ -1,25 +1,23 @@
 const bodyParser = require('body-parser');
 const express = require('express');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const app = express();
 
-const Rule = require('./models/Rulec')
+mongoose.connect("mongodb://localhost:27017/schedule", { useNewUrlParser: true });
 
-app.post('/create', (req, res) => {
-  res.send('Regra será criada aqui')
-})
+app.use(bodyParser.json());
 
-app.get('/all', (req, res) => {
-  res.send('Todas as regras serão mostradas aqui.')
-})
+const port = process.env.PORT || 3001;
 
-app.delete('/delete', (req, res) => {
-  res.send('A regra deletada será retornada aqui.');
-})
+const createRule = require('./routes/createRule');
+const getAll = require('./routes/getAll');
+const getInterval = require('./routes/getInterval');
+const removeRule = require('./routes/removeRule');
 
-app.get('/list', (req, res) => {
-  res.send('A lista de horários disponíveis será mostrada aqui.');
-})
+app.use(createRule);
+app.use(getAll);
+app.use(getInterval);
+app.use(removeRule);
 
-app.listen(3001, () => console.log('The server is up.'));
+app.listen(port, () => console.log('The server is up.'));

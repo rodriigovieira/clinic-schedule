@@ -1,5 +1,5 @@
 {
-  "name": "NodeProjects",
+  "name": "schedule-manager",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Rodrigo Vieira <rodriigovieira@gmail.com>",
@@ -10,9 +10,14 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "mocha": "^5.2.0",
     "moment": "^2.24.0",
-    "mongoose": "^5.4.9",
+    "mongoose": "^5.4.9"
+  },
+  "devDependencies": {
+    "eslint": "^5.13.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "mocha": "^5.2.0",
     "supertest": "^3.4.2"
   }
 }
