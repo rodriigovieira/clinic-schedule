@@ -11,6 +11,11 @@
   "rules": {
     "semi": 1,
     "quotes": 0,
-    "no-unused-vars": 1
+    "no-unused-vars": 1,
+    "comma-dangle": 1,
+    "consistent-return": 0,
+    "object-curly-newline": 1,
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "no-unneeded-ternary": ["error", { "defaultAssignment": true }]
   }
 }
