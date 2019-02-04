@@ -1,6 +1,47 @@
 # Clinic Schedule
 
-This is an application made to manage the schedule of a clinic, by using RESTFULL operations with NodeJS.
+Essa é uma aplicação feita para facilitar o gerenciamento de horários de uma empresa, permitindo o gerenciamento de dispobbilidade e dispondo de várias opções de criação de horários.
+
+# Instalação
+
+Para instalar o aplicativo, primeiro tenha certeza que você possui Node instalado localmente.
+
+Após isso, clone o repositório usando git. Execute em seu shell:
+
+```
+git clone https://github.com/rodriigovieira/schedule-manager.git
+```
+
+Depois, altere para o diretório do projeto usando cd e instale todas as dependências dele usando yarn. Execute:
+
+```
+cd schedule-manager && yarn install
+```
+
+Pronto! O projeto está instalado em sua máquina. Na próxima sesção, há as instruções de como utilizá-lo.
+
+# Utilização
+
+O projeto conta com dois comandos: `start` e `test`. O primeiro iniciará o projeto, enquanto o segundo rodará uma sequência de testes para verificar se as funcionalidades estão sendo executadas conforme planejado.
+
+Para iniciar o projeto, execute:
+
+```
+yarn start
+```
+
+Por padrão, o projeto será executado na porta 3001. Você pode alterar a porta no arquivo src/app.js ou mudando a variável de amiente process.env.PORT.
+
+Para poder usar o aplicativo, você precisa de um cliente para efetuar solicitações API. Um muito popular é o Postman. A documentação da API está disponível abaixo e você pode verifiar todas as opções e funcionalidades disponíveis.
+
+# Documentação
+
+O projeto conta com os seguintes endpoits:
+
+```
+- POST /create - cria horários no banco de dados. Aceita três opções diferentes.
+- GET /all - lista todos os horários disponíveis no banco de dados, inclusive se estão disponíveis ou não.
+```
 
 ### POST /create/:type
 
@@ -64,7 +105,7 @@ Por exemplo:
 }
 ```
 
-As propriedades `weekDays` e `free` são opcionais. Se não forem informadas, serão passados os valores '1, 2, 3, 4, 5' e `true`, respectivamente. Ou seja, o intervalo informado será criado em todos os dias de segunda a sexta das próximas quatro semanas.
+As propriedades `weekDays` e `free` são opcionais. Se não forem informadas, serão passados os valores '1, 2, 3, 4, 5' e `false`, respectivamente. Ou seja, o intervalo informado será criado em todos os dias de segunda a sexta das próximas quatro semanas e os horários NÃO estarão disponíveis.
 
 Por padrão, a regra acima funcionará para as próximas 4 semanas, mas você pode selecionar o número de semanas que deseja aplicar a regra alterando a propriedade `weeks` para o número de semanas desejado.
 

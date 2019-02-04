@@ -4,15 +4,18 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-// configure models
-// define request type and data
-// add the end, it has to be like this: schedule units that will be placed in the database
-// three mandatory properties: day, start and end. It all comes down to that
-// the create route should be something else. You don't have to create
-//  a Rule's Model in the database - it's pointless.
-// after all, you don't need an object in the database.
+// Defining whether should use development db or test db
+const env = process.env.NODE_ENV || 'development';
 
-mongoose.connect("mongodb://localhost:27017/schedule", { useNewUrlParser: true });
+let connectURL;
+
+if (env === 'test') {
+  connectURL = "mongodb://localhost:27017/scheduleTest";
+} else {
+  connectURL = "mongodb://localhost:27017/schedule";
+}
+
+mongoose.connect(connectURL, { useNewUrlParser: true });
 
 app.use(bodyParser.json());
 
@@ -31,3 +34,5 @@ app.use(getInterval);
 app.use(removeRule);
 
 app.listen(port, () => console.log('The server is up.'));
+
+module.exports = app;

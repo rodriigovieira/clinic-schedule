@@ -13,10 +13,10 @@ router.get("/create", (req, res) => {
   res.send("Nesse endpoint, você deve fazer uma solicitação POST para adicionar horários de atendimento. Consulte a documentação para verifiar como proceder.");
 });
 
-router.post("/create/:type", async (req, res) => {
+router.post("/create/:type?", async (req, res) => {
   const type = req.params.type ? Number(req.params.type) : 1;
-  const { start, end, day, month, free, weeks, year } = req.body;
-  let { weekDays } = req.body;
+  const { start, end, day, month, weeks, year } = req.body;
+  let { weekDays, free } = req.body;
 
   // defining monday as the first day of week
   moment().isoWeekday(1);
@@ -72,6 +72,8 @@ router.post("/create/:type", async (req, res) => {
       const finalDate = moment().add(numberOfWeeks, 'w');
       const numberOfDays = finalDate.diff(currentDate, 'd');
 
+      free = free ? free : false;
+
       const promisesHolder = [];
 
       for (let b = 0; b <= numberOfDays; b++) {
@@ -87,7 +89,7 @@ router.post("/create/:type", async (req, res) => {
               start,
               end,
               day: `${dayToWorkWith.format('YYYY')}-${dayToWorkWith.format('M')}-${dayToWorkWith.format('DD')}`,
-              free: true,
+              free,
             }).save()
           );
         }
