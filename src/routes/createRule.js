@@ -13,7 +13,8 @@ router.get("/create", (req, res) => {
 router.post("/create/:type?", async (req, res) => {
   const type = req.params.type ? Number(req.params.type) : 1;
   const { start, end, day, month, weeks, year } = req.body;
-  let { weekDays, free } = req.body;
+  let { free } = req.body;
+  const weekDays = req.body.weekDays ? String(req.body.weekDays) : '1, 2, 3, 4, 5';
 
   // defining monday as the first day of week
   moment().isoWeekday(1);
@@ -41,7 +42,7 @@ router.post("/create/:type?", async (req, res) => {
         fs.writeFile('data.json', JSON.stringify(jsonData), () => undefined);
       });
 
-      interval = new Interval({ start, end, day, free: free || false });
+      interval = new Interval({ start, end, day, free: free || false, timestamp: moment(day).format('x') });
 
       interval.save()
         .then(created => res.send(created))
@@ -68,6 +69,7 @@ router.post("/create/:type?", async (req, res) => {
             end,
             day: `${currentYear}-${finalMonth}-${c}`,
             free: free || true,
+            timestamp: moment(`${currentYear}-${finalMonth}-${c}`).format('x'),
           });
 
           jsonData.push({
@@ -75,6 +77,7 @@ router.post("/create/:type?", async (req, res) => {
             end,
             day: `${currentYear}-${finalMonth}-${c}`,
             free: free || true,
+            timestamp: moment(`${currentYear}-${finalMonth}-${c}`).format('x'),
           });
         }
 
@@ -104,8 +107,6 @@ router.post("/create/:type?", async (req, res) => {
           const dayToWorkWith = currentDate.add(1, 'day');
           const indexOfWeekDay = dayToWorkWith.day() + 1;
 
-          weekDays = weekDays ? String(weekDays) : '1, 2, 3, 4, 5';
-
           // if weekday matches with user's selected days, query db
           if (weekDays.indexOf(indexOfWeekDay) >= 0) {
             jsonData.push({
@@ -113,6 +114,7 @@ router.post("/create/:type?", async (req, res) => {
               end,
               day: `${dayToWorkWith.format('YYYY')}-${dayToWorkWith.format('M')}-${dayToWorkWith.format('DD')}`,
               free,
+              timestamp: moment(`${dayToWorkWith.format('YYYY')}-${dayToWorkWith.format('M')}-${dayToWorkWith.format('DD')}`).format('x'),
             });
 
             fs.writeFile('data.json', JSON.stringify(jsonData), () => undefined);
@@ -122,6 +124,7 @@ router.post("/create/:type?", async (req, res) => {
               end,
               day: `${dayToWorkWith.format('YYYY')}-${dayToWorkWith.format('M')}-${dayToWorkWith.format('DD')}`,
               free,
+              timestamp: moment(`${dayToWorkWith.format('YYYY')}-${dayToWorkWith.format('M')}-${dayToWorkWith.format('DD')}`).format('x'),
             });
           }
         }

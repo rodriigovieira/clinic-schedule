@@ -17,6 +17,7 @@ const intervalSchema = new mongoose.Schema({
     minLength: 1,
   },
   free: Boolean,
+  timestamp: Number,
 });
 
 module.exports = mongoose.model('Interval', intervalSchema);

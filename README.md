@@ -2,7 +2,7 @@
 
 Essa é uma aplicação feita para facilitar o gerenciamento de horários de uma empresa, permitindo o gerenciamento de disponibilidade e dispondo de várias opções para criação de horários.
 
-O aplicativo pode ser visualizado nesse link: 
+O aplicativo pode ser visualizado nesse link: http://clinic-schedule-manager.herokuapp.com/. Caso prefira, as próprias solicitações para a API podem ser efetuadas para esse mesmo link. Todavia, caso você deseje instalar o programa localmente, segue os passos abaixo.
 
 # Instalação
 
@@ -40,7 +40,7 @@ Para poder usar o aplicativo, você precisa de um cliente para efetuar solicita�
 
 # Documentação
 
-O projeto conta com os seguintes endpoits:
+O projeto conta com os seguintes endpoits: 
 
 ```
 - POST /create - cria horários no banco de dados. Aceita três opções diferentes.
