@@ -20,7 +20,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 const createRule = require('./routes/createRule');
 const getAll = require('./routes/getAll');

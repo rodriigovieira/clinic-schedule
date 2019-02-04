@@ -11,8 +11,10 @@ router.get('/delete', (req, res) => {
 
 router.delete('/delete/:type?', (req, res) => {
   const type = req.params.type ? Number(req.params.type) : 1;
-  const { start, end, day, month, weeks } = req.body;
-  const weekDays = req.body.weekDays ? String(req.body.weekDays) : '1, 2, 3, 4, 5'
+  const { start, end, month, weeks } = req.body;
+
+  const day = moment(req.body.day, 'DD-MM-YYYY') || moment().format('DD-MM-YYYY');
+  const weekDays = req.body.weekDays ? String(req.body.weekDays) : '1, 2, 3, 4, 5';
 
   const timestamp = moment(day).format('x');
 
@@ -26,14 +28,12 @@ router.delete('/delete/:type?', (req, res) => {
       .then(foundOne => res.send(foundOne))
       .catch(err => res.send(err));
   } else if (type === 2) {
-    const fullString = `2019-${month}`;
-
     Interval.find({})
       .then((all) => {
         const dataToSend = all.map((entry) => {
-          if (entry.day.substr(0, 6) === fullString.substr(0, 6)) {
-            return entry.day;
-          }
+          const dataDay = Number(moment(entry.day, 'DD-MM-YYYY').format('M'));
+
+          return (Number(dataDay) === Number(month)) ? entry.day : null;
         });
         return dataToSend;
       })
@@ -55,10 +55,10 @@ router.delete('/delete/:type?', (req, res) => {
     Interval.find({})
       .then((allData) => {
         const dataToSend = allData.map((value) => {
-          const valueTimestamp = moment(value.day).format('x');
+          const valueTimestamp = moment(value.day, 'DD-MM-YYYY').format('x');
           const minTimestamp = moment().format('x');
           const maxTimestamp = moment().add(numberOfWeeks, 'weeks').format('x');
-          const indexOfDay = moment(value.day).day();
+          const indexOfDay = moment(value.day, 'DD-MM-YYYY').day();
 
           const result = Boolean(valueTimestamp >= minTimestamp) && (valueTimestamp <= maxTimestamp);
           const secondResult = Boolean(weekDays.indexOf(indexOfDay) >= 0);

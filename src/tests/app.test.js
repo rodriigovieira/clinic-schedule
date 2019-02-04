@@ -10,14 +10,16 @@ beforeEach((done) => {
   Interval.deleteMany({})
     .then(() => {
       const intervals = [{
-        day: "2018-05-05",
+        day: moment("05-05-2019", "DD-MM-YYYY").format('DD-MM-YYYY'),
         start: "17:00",
         end: "17:30",
+        timestamp: moment('05-05-2019', 'DD-MM-YYYY').format('x'),
       },
       {
-        day: "2018-06-06",
+        day: "06-06-2019",
         start: "14:00",
         end: "14:30",
+        timestamp: moment('06-06-2019', 'DD-MM-YYYY').format('x'),
       }];
 
       Interval.insertMany(intervals)
@@ -39,9 +41,9 @@ describe('GET /all', () => {
   });
 });
 
-describe('POST /create', () => {  
+describe('POST /create', () => {
   it('should use type 1 if no type selected and create rule', (done) => {
-    const day = "2017-01-01";
+    const day = "01-01-2017";
     const start = "12:00";
     const end = "12:30";
 
@@ -60,8 +62,8 @@ describe('POST /create', () => {
     const end = "16:00";
 
     const numberOfDaysInMonth = moment().daysInMonth();
-    const currentDate = new Date().getDate();
-    const entries = numberOfDaysInMonth - (currentDate - 1);
+    const currentDate = moment().format('DD');
+    const entries = numberOfDaysInMonth - currentDate;
 
     request(app)
       .post('/create/2')
@@ -85,6 +87,74 @@ describe('POST /create', () => {
       .expect(200)
       .expect((res) => {
         expect(res.body.length > 0).toBe(true);
+      })
+      .end(done);
+  });
+});
+
+describe('POST /list', () => {
+  it('should return intervals with search params', (done) => {
+    const startDate = "01-05-2019";
+    const endDate = "01-06-2019";
+
+    request(app)
+      .post('/list')
+      .send({ startDate, endDate })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.length).toBe(1);
+        expect(res.body[0]).toMatchObject({
+          day: "05-05-2019",
+          start: "17:00",
+          end: "17:30",
+        });
+      })
+      .end(done);
+  });
+});
+
+describe('DELETE /delete', () => {
+  it('should delete with date, default option', (done) => {
+    const day = moment('05-05-2019', 'DD-MM-YYYY').format('DD-MM-YYYY');
+    const start = "17:00";
+
+    request(app)
+      .delete('/delete')
+      .send({ start, day })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.deletedCount).toBe(1);
+      })
+      .end(done);
+  });
+
+  it('should delete using monthly rule', (done) => {
+    const month = 6;
+    const start = '14:00';
+    const end = "14:30";
+
+    request(app)
+      .delete('/delete/2')
+      .send({ month, start, end })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.deletedCount).toBe(1);
+      })
+      .end(done);
+  });
+
+  it('should delete with weekly rule', (done) => {
+    const start = "14:00";
+    const end = "14:30";
+    const day = "06-06-2019";
+    const weeks = 20;
+
+    request(app)
+      .delete('/delete/3')
+      .send({ start, end, weeks, day })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.deletedCount).toBe(1);
       })
       .end(done);
   });
