@@ -17,17 +17,27 @@ router.post('/list', (req, res) => {
 
   Interval.find({})
     .then((allEntries) => {
-      const dataToSend = allEntries.map((value) => {
+      const datesArray = allEntries.map((value) => {
         if (value.timestamp >= startTimestamp && value.timestamp <= endTimestamp) {
           return value.day;
         }
       });
-      return dataToSend;
-    })
-    .then((dataToSend) => {
-      Interval.find({ day: { $in: [...dataToSend] } })
-        .then(found => res.send(found))
-        .catch(error => res.send(error));
+      const noRepetition = [...new Set(datesArray)];
+      noRepetition.pop();
+
+      const final = noRepetition.map((dateValue) => {
+        const intervalForDay = allEntries.map((data) => {
+          if (data.day === dateValue) {
+            return { start: data.start, end: data.end }
+          }
+        });
+        
+        const arrayMaster = [...new Set(intervalForDay)];
+        const filtered = arrayMaster.filter(value => value != null);
+
+        return { day: dateValue, intervals: filtered };
+      });
+      res.send(final);
     })
     .catch(e => res.send(e));
 });

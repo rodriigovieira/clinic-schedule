@@ -8,8 +8,6 @@ O aplicativo pode ser visualizado nesse link: http://clinic-schedule-manager.her
 
 Para instalar o aplicativo, primeiro tenha certeza que você possui Node instalado localmente. Também é preciso que você possua o MongoDB instalado e iniciado localmente.
 
-Caso não possua o MongoDB instalado, o aplicativo gerenciará os dados localmente, através do arquivo `data.json`.
-
 Após isso, clone o repositório usando git. Execute em seu shell:
 
 ```

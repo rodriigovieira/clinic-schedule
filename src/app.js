@@ -36,6 +36,6 @@ app.get('/', (req, res) => {
   res.send(`Bem-vindo ao gerenciador de horários. Para começar a utilizar o aplicativo, verifique a documentação no Github: https://github.com/rodriigovieira/schedule-manager.`);
 });
 
-app.listen(port, () => console.log('The server is up.'));
+app.listen(port, () => console.log(`The server is up on port ${port}.`));
 
 module.exports = app;

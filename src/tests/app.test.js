@@ -103,11 +103,7 @@ describe('POST /list', () => {
       .expect(200)
       .expect((res) => {
         expect(res.body.length).toBe(1);
-        expect(res.body[0]).toMatchObject({
-          day: "05-05-2019",
-          start: "17:00",
-          end: "17:30",
-        });
+        expect(res.body[0]).toMatchObject({ day: "05-05-2019" });
       })
       .end(done);
   });
