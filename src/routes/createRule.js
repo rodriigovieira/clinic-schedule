@@ -14,9 +14,12 @@ router.get("/create", (req, res) => {
 });
 
 router.post("/create/:type", async (req, res) => {
-  const type = Number(req.params.type);
+  const type = req.params.type ? Number(req.params.type) : 1;
   const { start, end, day, month, free, weeks, year } = req.body;
   let { weekDays } = req.body;
+
+  // defining monday as the first day of week
+  moment().isoWeekday(1);
 
   let interval;
 
@@ -75,7 +78,7 @@ router.post("/create/:type", async (req, res) => {
         const dayToWorkWith = currentDate.add(1, 'day');
         const indexOfWeekDay = dayToWorkWith.day() + 1;
 
-        weekDays = weekDays ? weekDays : '1, 2, 3, 4, 5';
+        weekDays = weekDays ? String(weekDays) : '1, 2, 3, 4, 5';
 
         // if weekday matches with user's selected days, query db
         if (weekDays.indexOf(indexOfWeekDay) >= 0) {
