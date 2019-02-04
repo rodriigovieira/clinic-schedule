@@ -1,11 +1,8 @@
 const express = require("express");
 const moment = require('moment');
+const fs = require('fs');
 
 const router = express.Router();
-
-// create daily - will apply rule to all days of current month
-// create monthly - will apply rule to all days of current month
-// if want another month, just choose monthNumber option with the value of month
 
 const Interval = require("../models/interval");
 
@@ -35,35 +32,58 @@ router.post("/create/:type?", async (req, res) => {
     }
 
     if (type === 1) {
+      let jsonData;
+
+      fs.readFile('data.json', 'utf8', (error, data) => {
+        jsonData = !data ? [] : JSON.parse(data);
+
+        jsonData.push({ start, end, day, free: free || false });
+        fs.writeFile('data.json', JSON.stringify(jsonData), () => undefined);
+      });
+
       interval = new Interval({ start, end, day, free: free || false });
 
       interval.save()
         .then(created => res.send(created))
         .catch(error => res.status(401).send(error));
     } else if (type === 2) {
+      let jsonData;
+
       // Getting information for date to pass to the loop
       const currentYear = year ? year : new Date().getFullYear();
-      const currentMonth = month ? month : (new Date().getMonth() + 1);
-      const currentDay = new Date().getDate();
-      const numberOfDaysInMonth = moment(`${currentYear}-${currentMonth}`, "YYYY-MM").daysInMonth();
+      const currentMonth = (new Date().getMonth() + 1);
+      const finalMonth = month ? month : currentMonth;
+      const dayToStart = (month && month !== currentMonth) ? 1 : new Date().getDate() + 1;
+      const numberOfDaysInMonth = moment(`${currentYear}-${finalMonth}`, "YYYY-MM").daysInMonth();
 
       // Storing all promises under one array to execute "then" call only once
       const promisesReturn = [];
 
-      for (let c = currentDay; c <= numberOfDaysInMonth; c++) {
-        promisesReturn.push(
-          new Interval({
+      fs.readFile('data.json', 'utf8', (error, data) => {
+        jsonData = !data ? [] : JSON.parse(data);
+
+        for (let c = dayToStart; c <= numberOfDaysInMonth; c++) {
+          promisesReturn.push({
             start,
             end,
-            day: `${currentYear}-${currentMonth}-${c}`,
+            day: `${currentYear}-${finalMonth}-${c}`,
             free: free || true,
-          }).save()
-        );
-      }
+          });
 
-      Promise.all(promisesReturn)
-        .then(entries => res.send(entries))
-        .catch(error => res.status(401).send(error));
+          jsonData.push({
+            start,
+            end,
+            day: `${currentYear}-${finalMonth}-${c}`,
+            free: free || true,
+          });
+        }
+
+        fs.writeFile('data.json', JSON.stringify(jsonData), () => undefined);
+
+        Interval.insertMany(promisesReturn)
+          .then(entries => res.send(entries))
+          .catch(() => res.status(401));
+      });
     } else if (type === 3) {
       // number of weeks to create in the db. If no user's choice, default is 4
       const numberOfWeeks = weeks ? weeks : 4;
@@ -75,29 +95,41 @@ router.post("/create/:type?", async (req, res) => {
       free = free ? free : false;
 
       const promisesHolder = [];
+      let jsonData;
 
-      for (let b = 0; b <= numberOfDays; b++) {
-        const dayToWorkWith = currentDate.add(1, 'day');
-        const indexOfWeekDay = dayToWorkWith.day() + 1;
+      fs.readFile('data.json', 'utf8', (error, data) => {
+        jsonData = !data ? [] : JSON.parse(data);
 
-        weekDays = weekDays ? String(weekDays) : '1, 2, 3, 4, 5';
+        for (let b = 0; b <= numberOfDays; b++) {
+          const dayToWorkWith = currentDate.add(1, 'day');
+          const indexOfWeekDay = dayToWorkWith.day() + 1;
 
-        // if weekday matches with user's selected days, query db
-        if (weekDays.indexOf(indexOfWeekDay) >= 0) {
-          promisesHolder.push(
-            new Interval({
+          weekDays = weekDays ? String(weekDays) : '1, 2, 3, 4, 5';
+
+          // if weekday matches with user's selected days, query db
+          if (weekDays.indexOf(indexOfWeekDay) >= 0) {
+            jsonData.push({
               start,
               end,
               day: `${dayToWorkWith.format('YYYY')}-${dayToWorkWith.format('M')}-${dayToWorkWith.format('DD')}`,
               free,
-            }).save()
-          );
-        }
-      }
+            });
 
-      Promise.all(promisesHolder)
-        .then(entries => res.send(entries))
-        .catch(error => res.status(401).send(error));
+            fs.writeFile('data.json', JSON.stringify(jsonData), () => undefined);
+
+            promisesHolder.push({
+              start,
+              end,
+              day: `${dayToWorkWith.format('YYYY')}-${dayToWorkWith.format('M')}-${dayToWorkWith.format('DD')}`,
+              free,
+            });
+          }
+        }
+
+        Interval.insertMany(promisesHolder)
+          .then(entries => res.send(entries))
+          .catch(e => res.send(e));
+      });
     }
 
     if (err) {

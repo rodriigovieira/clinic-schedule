@@ -1,10 +1,14 @@
 # Clinic Schedule
 
-Essa é uma aplicação feita para facilitar o gerenciamento de horários de uma empresa, permitindo o gerenciamento de dispobbilidade e dispondo de várias opções de criação de horários.
+Essa é uma aplicação feita para facilitar o gerenciamento de horários de uma empresa, permitindo o gerenciamento de disponibilidade e dispondo de várias opções para criação de horários.
+
+O aplicativo pode ser visualizado nesse link: 
 
 # Instalação
 
-Para instalar o aplicativo, primeiro tenha certeza que você possui Node instalado localmente.
+Para instalar o aplicativo, primeiro tenha certeza que você possui Node instalado localmente. Também é preciso que você possua o MongoDB instalado e iniciado localmente.
+
+Caso não possua o MongoDB instalado, o aplicativo gerenciará os dados localmente, através do arquivo `data.json`.
 
 Após isso, clone o repositório usando git. Execute em seu shell:
 
@@ -18,7 +22,7 @@ Depois, altere para o diretório do projeto usando cd e instale todas as depend�
 cd schedule-manager && yarn install
 ```
 
-Pronto! O projeto está instalado em sua máquina. Na próxima sesção, há as instruções de como utilizá-lo.
+Pronto! O projeto está instalado em sua máquina. Na próxima seção, estão as instruções de como utilizá-lo.
 
 # Utilização
 
@@ -30,7 +34,7 @@ Para iniciar o projeto, execute:
 yarn start
 ```
 
-Por padrão, o projeto será executado na porta 3001. Você pode alterar a porta no arquivo src/app.js ou mudando a variável de amiente process.env.PORT.
+Por padrão, o projeto será executado na porta 3001. Você pode alterar a porta no arquivo src/app.js ou mudando a variável de ambiente process.env.PORT.
 
 Para poder usar o aplicativo, você precisa de um cliente para efetuar solicitações API. Um muito popular é o Postman. A documentação da API está disponível abaixo e você pode verifiar todas as opções e funcionalidades disponíveis.
 
@@ -45,11 +49,11 @@ O projeto conta com os seguintes endpoits:
 
 ### POST /create/:type
 
-Essa solicitação à API serve para gerenciar os horários no banco de dados. Essa oopção disponibiliza três tipos de solicitação. Por padrão, a opção que será escolhida será a número 1.
+Essa solicitação à API serve para gerenciar os horários no banco de dados. Essa oopção disponibiliza três tipos de solicitação.
 
 Se o parâmetro `:type` não for informado, será utilizado a opção 1 como padrão.
 
-##### POST /create/1
+##### POST /create/1 (padrão)
 
 No tipo 1, você estará criando uma regra em um dia específico. Portanto, você deve informar a data na solicitação POST no body da request, em JSON, através da propriedade "day".
 
