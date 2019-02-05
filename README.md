@@ -32,7 +32,7 @@ Para iniciar o projeto, execute:
 yarn start
 ```
 
-Por padrão, o projeto será executado na porta 3001. Você pode alterar a porta no arquivo src/app.js ou mudando a variável de ambiente process.env.PORT.
+Por padrão, o projeto será executado na porta 3000. Você pode alterar a porta no arquivo src/app.js ou mudando a variável de ambiente PORT.
 
 Para poder usar o aplicativo, você precisa de um cliente para efetuar solicitações API. Um muito popular é o Postman. A documentação da API está disponível abaixo e você pode verifiar todas as opções e funcionalidades disponíveis.
 
