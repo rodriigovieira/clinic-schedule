@@ -2,8 +2,6 @@
 
 Essa é uma aplicação feita para facilitar o gerenciamento de horários de uma empresa, permitindo o gerenciamento de disponibilidade e dispondo de várias opções para criação de horários.
 
-O aplicativo pode ser visualizado nesse link: http://schedule-manager.rodrigovieira.work. Caso prefira, as próprias solicitações para a API podem ser efetuadas para esse mesmo link. Todavia, caso você deseje instalar o programa localmente, segue os passos abaixo.
-
 # Instalação
 
 Para instalar o aplicativo, primeiro tenha certeza que você possui Node instalado localmente. Também é preciso que você possua o MongoDB instalado e iniciado localmente.
